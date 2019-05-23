@@ -62,8 +62,8 @@
                 </div>
             </div>
             <ul class="sidebar-menu" data-widget="tree">
-                <li><a href="{{-- path('dashboard') --}}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-                <li><a href="{{-- path('leer_archivo_txt') --}}"><i class="fa fa-folder-o"></i> <span>Groups</span></a></li>
+                <li><a href="{{ route('home') }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+                <li><a href="{{ route('showGroups') }}"><i class="fa fa-folder-o"></i> <span>Groups</span></a></li>
                 <li><a href="{{-- path('lista_usuarios') --}}"><i class="fa fa-group"></i> <span>List users</span></a></li>
                 <li><a href="{{-- path('grupos_target') --}}"><i class="fa fa-certificate"></i> <span>Target categories</span></a></li>
                 <li><a href="{{-- path('grupos_acl') --}}"><i class="fa fa-shield"></i> <span>ACL groups</span></a></li>
@@ -74,7 +74,7 @@
                     <a href="{{ route('logout') }}"
                         onclick="event.preventDefault();
                                  document.getElementById('logout-form').submit();">
-                        Logout
+                        <i class="fa fa-sign-out"></i> Logout
                     </a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         {{ csrf_field() }}
@@ -103,5 +103,10 @@
     <script src="{{ asset ('vendor/fastclick/lib/fastclick.js') }}"></script>
     <script src="{{ asset ('vendor/dist/js/adminlte.min.js') }}"></script>
     <script src="{{ asset ('vendor/dist/js/demo.js') }}"></script>
+    <script>
+        $(function () {
+            $('#example1').DataTable()
+        });
+    </script>
 </body>
 </html>

@@ -14,12 +14,13 @@ class CreateInterfacesTable extends Migration
     public function up()
     {
         Schema::create('interfaces', function (Blueprint $table) {
-            $table->string('interfas');
+            $table->increments('id');
+            $table->string('interface');
             $table->string('name');
             $table->string('type');
             $table->string('ip');
-            $table->string('group');
-            $table->string('campus');
+            $table->integer('campus_id')->unsigned();
+            $table->foreign('campus_id')->references('id')->on('campuses')->onDelete('cascade');
             $table->timestamps();
         });
     }

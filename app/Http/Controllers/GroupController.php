@@ -3,102 +3,88 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Group;
+use App\Campus;
+use App\Interfaces;
+use Redirect;
+use Illuminate\Support\Facades\DB;
 
 class GroupController extends Controller
 {
-    # Funcion para leer el archivo txt y guardar los datos en la base #
-	public function leer_archivo_txtAction()
-	{
-		$role= \Auth::user()->role;
-		if($role == "ADMIN"){
-			$group= \Auth::user()->group;
-			$campus = $this->obtener_nombre_campus($group);
-			$interfaces = array("wan", "lan", "opt1", "opt2","opt3");
-	    	$interfaces_archivo = fopen("interfaces.txt", "w");
-	    	foreach ($campus as $equipo_grupos){
-				foreach ($equipo_grupos as $equipo){
-					$xml = simplexml_load_file("clients/$group/$equipo/info.xml");
-					foreach ($interfaces as $interfaces_equipo){
-						$tipo_interfas = $xml->xpath("/interfaces/$interfaces_equipo/if");
-		        		$nombre = $xml->xpath("/interfaces/$interfaces_equipo/descr");
-		        		$ip = $xml->xpath("/interfaces/$interfaces_equipo/ipaddr");
-		        		foreach ($tipo_interfas as $interfas){
-							fwrite($interfaces_archivo, $interfas."|");
-						}
-						foreach ($nombre as $nombre_interfas){
-							fwrite($interfaces_archivo, $nombre_interfas . "|".$interfaces_equipo."|");
-						}
-						foreach ($ip as $ip_equipo) {
-							$ip_nueva = preg_replace('/\d{1,3}$/', '', $ip_equipo);
-							if($ip_nueva == "dhcp"){
-								fwrite($interfaces_archivo, "192.168.0." . "|$group|".$equipo."|\n");
-							}
-							else{
-								$resultado_ip = $ip_nueva . "|$group|$equipo|\n";
-								fwrite($interfaces_archivo, $resultado_ip);
-							}
-						}
-					}
-				}
-			}
-			fclose($interfaces_archivo);
-		}
-		# Query para borrar la tabla grupos de la base de datos #
-		$delete_groups = DB::delete("DELETE FROM groups";);
-		# Query para que la secuencia del contador regrese a 1 #
-		//$query_alter_grupos = "ALTER SEQUENCE grupos_id_seq RESTART WITH 1";
-		//$statement = "ALTER SEQUENCE grupos_id_seq RESTART WITH 1";
-        //DB::unprepared($statement);
-		# Query para borrar la tabla grupos de la base de datos #
-		$delete_interfaces = DB::delete("DELETE FROM interfaces";);
-		# Query para que la secuencia del contador regrese a 1 #
-		//$query_alter_interfaces = "ALTER SEQUENCE interfaces_id_seq RESTART WITH 1";
-		# Variable para leer el archivo informacion.txt #
-		$filas=file('informacion.txt'); 
-		foreach($filas as $value){
-			list($ip, $grupo, $plantel) = explode("|", $value);
-			'ip: '.$ip.'<br/>';
-			'grupo: '.$grupo.'<br/>';
-			'plantel: '.$plantel.'<br/><br/>';
-			DB::insert('INSERT INTO groups(ip, group, campus, created_at, updated_at) VALUES (?, ?, ?, ?, ?)',[$ip, $grupo, $plantel, NOW(), NOW()]);
-		}
-		$archivo_interfaces=file('interfaces.txt'); 
-		foreach($archivo_interfaces as $archivo_interfas){
-			list($interfaz, $tipo, $nombre, $ip, $grupo, $plantel) = explode("|", $archivo_interfas);
-			'interfaz: '.$interfaz.'<br/>';
-			'tipo: '.$tipo.'<br/>'; 
-			'nombre: '.$nombre.'<br/>'; 
-			'ip: '.$ip.'<br/>';
-			'grupo: '.$grupo.'<br/>';
-			'plantel: '.$plantel.'<br/><br/>';
-			DB::insert('INSERT INTO interfaces(interfas, name, type, ip, group, campus, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',[$interfaz, $tipo, 
-				$nombre, $ip, $grupo, $plantel, NOW(), NOW()]);
-		}
-		return $this->redirectToRoute("grupos");
-	}
+    public function showGroups()
+    {
+        $role= \Auth::user()->role;
+        if($role === 'SUPER'){
+            $group=Group::orderBy('id')->paginate();
+        }
+        return view('groups.showGroups',compact('group'));
+    }
 
-	# Area de consultas #
-	# Funcion utilizada en leer_archivo_txt #
-	private function obtener_nombre_campus($group)
-	{
-		$obtener_nombre_campus= DB::select("SELECT campus FROM groups WHERE group = ?", [$group]);
-		return $obtener_nombre_campus;
-	}
-	# Funcion utilizada en grupos #
-	private function recuperar_grupo_grupos()
-	{
-		$em = $this->getDoctrine()->getEntityManager();
-		$query = $em->createQuery('SELECT DISTINCT g.nombre FROM AppBundle:grupos g ORDER BY g.nombre ASC');
-		$grupos = $query->getResult();
-		return $grupos;
-	}
-	# Funcion utilizada en ver_ip #
-	private function obtener_ip_plantel_grupos($grupo)
-	{
-		$em = $this->getDoctrine()->getEntityManager();
-		$query = $em->createQuery('SELECT g.id, g.ip, g.descripcion FROM AppBundle:grupos g
-			WHERE g.nombre = :grupo ORDER BY g.descripcion ASC')->setParameter('grupo', $grupo);
-		$grupos = $query->getResult();
-		return $grupos;
-	}
+    public function createGroup()
+    {
+    	return view('groups.createGroup');
+    }
+
+    public function createGroupPost(Request $request)
+    {
+    	$this->validate($request,[
+            'name' => 'required|max:15|alpha_dash|unique:groups',
+        ]);
+        $group = new Group;
+        $group->name = $request->name;
+        $group->save();
+        return redirect()->route('showGroups')->with('success','Registry created successfully.');
+    }
+
+    public function showDevices($id)
+    {
+    	$device = DB::table('campuses')->select('id','name')->distinct()->where('group_id', '=', $id)->get();
+    	return view('groups.showDevices',compact('device','id'));
+    }
+
+    public function createDevice($id)
+    {
+    	return view('groups.createDevice',compact('id'));
+    }
+
+    public function createDevicePost(Request $request)
+    {
+    	$this->validate($request,[ 
+            'campus' => 'required|max:30|alpha_dash',
+        ]);
+        $campus = new Campus;
+        $campus->name = $request->campus;
+        $campus->group_id = $request->group_id;
+        $campus->save();
+        return redirect()->route('showDevices',$request->group_id)->with('success','Registry created successfully.');
+    }
+
+    public function showInterfaces($id)
+    {
+        $interface=Interfaces::orderBy('id')->paginate();
+        return view('groups.showInterfaces',compact('interface','id'));
+    }
+
+    public function createInterface($id)
+    {
+        return view('groups.createInterface',compact('id'));
+    }
+
+    public function createInterfacePost(Request $request)
+    {
+        $this->validate($request,[ 
+            'interface' => 'required|unique:interfaces',
+            'name_interface' => 'required|max:30|alpha_dash',
+            'type_interface' => 'required|max:30|alpha_dash',
+            'ip_interface' => 'required|ip',
+        ]);
+        $Interfaces = new Interfaces;
+        $Interfaces->interface = $request->interface;
+        $Interfaces->name = $request->name_interface;
+        $Interfaces->type = $request->type_interface;
+        $Interfaces->ip = $request->ip_interface;
+        $Interfaces->campus_id = $request->campus_id;
+        $Interfaces->save();
+        return redirect()->route('showInterfaces',$request->campus_id)->with('success','Registry created successfully.');
+    }
 }

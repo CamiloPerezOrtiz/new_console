@@ -20,7 +20,8 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->enum('role',['SUPER','ADMIN','USER']);
-            $table->string('group');
+            $table->integer('group_id')->unsigned();
+            $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();
         });
