@@ -6,11 +6,11 @@
                 <div class="col-xs-12">
                     <div class="box box-primary">
                         <div class="box-header">
-                            <h3 class="box-title">Device Information</h3>
+                            <h3 class="box-title">Target Categories {{ $campus }} </h3>
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <div class="box-header">
-                                    <a href="{{ route('showDevices', $group_id->group_id) }}" class="btn btn-danger">Back</a>
-                                    <a href="{{ route('createInterface', $id) }}" class="btn btn-success">New Interface</a>
+                                    <a href="{{ route('showDevicesTarget', $id) }}" class="btn btn-danger">Back</a>
+                                    <!--<a href="{{-- route('createInterface', $id) --}}" class="btn btn-success">New Interface</a>-->
                                 </div>
                             </div>
                         </div>
@@ -27,28 +27,26 @@
                                 <table id="example1" class="table table-bordered table-hover text-center">
                                     <thead>
                                         <tr>
-                                            <th>Interface</th>   
-                                            <th>Name</th>
-                                            <th>Type</th>
-                                            <th>IP</th>
+                                            <th>Name</th>   
+                                            <th>Redirect</th>
+                                            <th>Description</th>
                                             <th>Edit</th>
                                             <th>Delete</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($interface as $interfaces)
+                                        @foreach($target_xml as $xml)
                                             <tr>
-                                                <td>{{ $interfaces->interface }}</td>
-                                                <td>{{ $interfaces->name }}</td>
-                                                <td>{{ $interfaces->type }}</td>
-                                                <td>{{ $interfaces->ip }}</td>
+                                                <td>{{ $xml->name }}</td>
+                                                <td>{{ $xml->redirect }}</td>
+                                                <td>{{ $xml->description }}</td>
                                                 <td>
-                                                    <a href="{{ route('editInterface', $interfaces->id) }}" class="btn btn-warning btn-xs">
+                                                    <a href="{{ route('editTargetDevice', ['name' => $xml->name, 'id' =>$id, 'campus' => $campus]) }}" class="btn btn-warning btn-xs">
                                                         <i class="fa fa-pencil"></i> Edit 
                                                     </a> 
                                                 </td>
                                                 <td>
-                                                    <a href="{{ route('deleteInterface', $interfaces->id) }}" class="btn btn-danger btn-xs">
+                                                    <a href="{{ route('deleteTargetDevice', ['name' => $xml->name, 'id' =>$id, 'campus' => $campus]) }}" class="btn btn-danger btn-xs">
                                                         <i class="fa fa-trash-o"></i> Delete 
                                                     </a> 
                                                 </td>

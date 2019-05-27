@@ -17,7 +17,7 @@
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
     <header class="main-header">
-        <a href="{{-- path('dashboard') --}}" class="logo">
+        <a href="{{ route('home') }}" class="logo">
             <span class="logo-mini"><b>W</b>L</span>
             <span class="logo-lg"><b>Warriors </b>Labs</span>
         </a>
@@ -54,19 +54,27 @@
                         SUPER USER
                     @endif
                     @if(Auth::user()->role == 'ADMIN')
-                        Administrator
+                        ADMIN
                     @endif
                     @if(Auth::user()->role == 'USER')
-                        User
+                        USER
                     @endif
                 </div>
             </div>
             <ul class="sidebar-menu" data-widget="tree">
                 <li><a href="{{ route('home') }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-                <li><a href="{{ route('showGroups') }}"><i class="fa fa-folder-o"></i> <span>Groups</span></a></li>
-                <li><a href="{{-- path('lista_usuarios') --}}"><i class="fa fa-group"></i> <span>List users</span></a></li>
-                <li><a href="{{-- path('grupos_target') --}}"><i class="fa fa-certificate"></i> <span>Target categories</span></a></li>
-                <li><a href="{{-- path('grupos_acl') --}}"><i class="fa fa-shield"></i> <span>ACL groups</span></a></li>
+                <li>
+                    <a href="{{ route('showGroups') }}">
+                        @if(Auth::user()->role == 'SUPER')
+                            <i class="fa fa-folder-o"></i> <span>Groups</span>
+                        @endif
+                        @if(Auth::user()->role == 'ADMIN')
+                            <i class="fa fa-inbox"></i><span>Devices</span>
+                        @endif
+                    </a>
+                </li>
+                <li><a href="{{ route('showGroupsTarget') }}"><i class="fa fa-certificate"></i> <span>Target Categories</span></a></li>
+                <li><a href="{{ route('showGroupsAcl') }}"><i class="fa fa-shield"></i> <span>ACL Groups</span></a></li>
                 <li><a href="{{-- path('grupos_aliases') --}}"><i class="fa fa-th-large"></i> <span>Aliases</span></a></li>
                 {{--<li><a href="{{ path('gruposNat') }}"><i class="fa fa-book"></i> <span>NAT</span></a></li>--}}
                 <li><a href="{{-- path('gruposFirewall') --}}"><i class="fa fa-fire"></i> <span>Firewall rules</span></a></li>

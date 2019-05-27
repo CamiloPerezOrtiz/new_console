@@ -3,7 +3,7 @@
     <div class="content-wrapper">
         <section class="content-header">
             <h1>
-                All Groups
+                ACL Groups
             </h1>
         </section>
         <section class="content">
@@ -19,7 +19,6 @@
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="box-header">
                         <a href="{{ route('home') }}" class="btn btn-danger">Back</a>
-                        <a href="{{ route('createGroup') }}" class="btn btn-success">New Group</a>
                     </div>
                 </div>
                 @foreach($group as $groups)
@@ -31,9 +30,8 @@
                             <div class="icon">
                                 <i class="fa fa-list"></i>
                             </div>
-                            <a href="{{ route('showDevices',$groups->id) }}" class="small-box-footer">View Devices <i class="fa fa-arrow-circle-right"></i></a>
-                            <a href="{{ route('showUsers',$groups->id) }}" class="small-box-footer">View Users <i class="fa fa-arrow-circle-right"></i></a>
-                            <!--<a href="{{-- route('editGroup',$groups->id) --}}" class="small-box-footer">Edit Group <i class="fa fa-arrow-circle-right"></i></a>-->
+                            <a href="{{ route('showDevicesAcl',$groups->id) }}" class="small-box-footer">View Devices <i class="fa fa-arrow-circle-right"></i></a>
+                            <a href="{{ route('createTargetDevice',$groups->id) }}" class="small-box-footer">New ACL Groups <i class="fa fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
                 @endforeach

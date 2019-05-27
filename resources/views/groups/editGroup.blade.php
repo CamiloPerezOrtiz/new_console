@@ -8,7 +8,7 @@
                 <div class="col-md-8">
                     <div class="box box-primary">
                         <div class="box-header with-border">
-                            <h3 class="box-title">New Device</h3>
+                            <h3 class="box-title">Edit Group</h3>
                         </div>
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             @if(Session::has('success'))
@@ -27,21 +27,20 @@
                                 </div>
                             @endif
                         </div>
-                        <form method="post" action="{{ route('createDevicePost') }}">
+                        <form method="post" action="{{ route('editGroupPost', $group->id) }}">
                             {{csrf_field()}}
-                            <input type="hidden" value="{{ $id }}" name="group_id">
                             <div class="modal-body">
                                 <div class="box-body">
                                     <div class="form-group">
-                                        <label>Campus</label>
-                                        <input type="text" name="name" class="form-control" placeholder="Writte the campus name" value="{{ old('campus') }}">
+                                        <label>Name</label>
+                                        <input type="text" class="form-control" name="name" placeholder="Writte the name" value="{{ $group->name }}">
                                         <small class="help-block">
-                                            Add the name of where the equipment is located.
+                                            Writte the name of the group.
                                         </small>
                                     </div>
                                 </div>
                                 <div class="box-footer">
-                                    <a href="{{ route('showDevices',$id) }}" class="btn btn-danger">Cancel</a>
+                                    <a href="{{ route('showGroups') }}" class="btn btn-danger">Cancel</a>
                                     <button type="submit" name="guardar" class="btn btn-primary">Save</button>
                                 </div>
                             </div>

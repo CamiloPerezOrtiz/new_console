@@ -8,7 +8,7 @@
                 <div class="col-md-8">
                     <div class="box box-primary">
                         <div class="box-header with-border">
-                            <h3 class="box-title">New group</h3>
+                            <h3 class="box-title">New Group</h3>
                         </div>
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             @if(Session::has('success'))

@@ -69,4 +69,24 @@
 				<description></description>
 				<enablelog>on</enablelog>
 			</config>
+			<config>
+				<name>Prueba</name>
+				<domains>Prueba editado</domains>
+				<urls>Prueba editado</urls>
+				<expressions>Prueba editado</expressions>
+				<redirect_mode>rmod_none</redirect_mode>
+				<redirect>Prueba editado</redirect>
+				<description>Prueba editado</description>
+				<enablelog>off</enablelog>
+			</config>
+			<config>
+				<name>Prueba2</name>
+				<domains>facebook.com</domains>
+				<urls>facebook.com/</urls>
+				<expressions>|facebook|</expressions>
+				<redirect_mode>rmod_int</redirect_mode>
+				<redirect></redirect>
+				<description></description>
+				<enablelog>off</enablelog>
+			</config>
 		</squidguarddest>

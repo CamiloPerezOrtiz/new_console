@@ -6,11 +6,11 @@
                 <div class="col-xs-12">
                     <div class="box box-primary">
                         <div class="box-header">
-                            <h3 class="box-title">Device Information</h3>
+                            <h3 class="box-title">Users</h3>
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <div class="box-header">
-                                    <a href="{{ route('showDevices', $group_id->group_id) }}" class="btn btn-danger">Back</a>
-                                    <a href="{{ route('createInterface', $id) }}" class="btn btn-success">New Interface</a>
+                                    <a href="{{ route('showGroups') }}" class="btn btn-danger">Back</a>
+                                    <a href="{{ route('createUser', $id) }}" class="btn btn-success">New User</a>
                                 </div>
                             </div>
                         </div>
@@ -27,28 +27,28 @@
                                 <table id="example1" class="table table-bordered table-hover text-center">
                                     <thead>
                                         <tr>
-                                            <th>Interface</th>   
-                                            <th>Name</th>
-                                            <th>Type</th>
-                                            <th>IP</th>
+                                            <th>Name</th>   
+                                            <th>Lastname</th>
+                                            <th>email</th>
+                                            <th>Role</th>
                                             <th>Edit</th>
                                             <th>Delete</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($interface as $interfaces)
+                                        @foreach($user as $users)
                                             <tr>
-                                                <td>{{ $interfaces->interface }}</td>
-                                                <td>{{ $interfaces->name }}</td>
-                                                <td>{{ $interfaces->type }}</td>
-                                                <td>{{ $interfaces->ip }}</td>
+                                                <td>{{ $users->name }}</td>
+                                                <td>{{ $users->lastname }}</td>
+                                                <td>{{ $users->email }}</td>
+                                                <td>{{ $users->role }}</td>
                                                 <td>
-                                                    <a href="{{ route('editInterface', $interfaces->id) }}" class="btn btn-warning btn-xs">
+                                                    <a href="{{ route('editUser', $users->id) }}" class="btn btn-warning btn-xs">
                                                         <i class="fa fa-pencil"></i> Edit 
                                                     </a> 
                                                 </td>
                                                 <td>
-                                                    <a href="{{ route('deleteInterface', $interfaces->id) }}" class="btn btn-danger btn-xs">
+                                                    <a href="{{ route('deleteUser', $users->id) }}" class="btn btn-danger btn-xs">
                                                         <i class="fa fa-trash-o"></i> Delete 
                                                     </a> 
                                                 </td>
