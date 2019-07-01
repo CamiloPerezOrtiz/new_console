@@ -31,9 +31,10 @@
                             <div class="icon">
                                 <i class="fa fa-list"></i>
                             </div>
-                            <a href="{{ route('showDevices',$groups->id) }}" class="small-box-footer">View Devices <i class="fa fa-arrow-circle-right"></i></a>
+                            <a href="{{ route('showDevices', Crypt::encrypt($groups->id)) }}" class="small-box-footer">View Devices <i class="fa fa-arrow-circle-right"></i></a>
                             <a href="{{ route('showUsers',$groups->id) }}" class="small-box-footer">View Users <i class="fa fa-arrow-circle-right"></i></a>
-                            <!--<a href="{{-- route('editGroup',$groups->id) --}}" class="small-box-footer">Edit Group <i class="fa fa-arrow-circle-right"></i></a>-->
+                            <a href="{{ route('editGroup',$groups->id) }}" class="small-box-footer">Edit Group <i class="fa fa-arrow-circle-right"></i></a>
+                            <a href="{{ route('deleteGroup',$groups->id) }}" class="small-box-footer">Delete Group <i class="fa fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
                 @endforeach

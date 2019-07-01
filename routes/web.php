@@ -23,6 +23,7 @@ Route::get('/new-group', 'GroupController@createGroup')->name('createGroup');
 Route::post('/new-group', 'GroupController@createGroupPost')->name('createGroupPost');
 Route::get('/edit-group/{id}', 'GroupController@editGroup')->name('editGroup');
 Route::post('/edit-group/{id}', 'GroupController@editGroupPost')->name('editGroupPost');
+Route::get('/delete-group/{id}', 'GroupController@deleteGroup')->name('deleteGroup');
 Route::get('/show-users/{id}', 'GroupController@showUsers')->name('showUsers');
 Route::get('/new-user/{id}', 'GroupController@createUser')->name('createUser');
 Route::post('/new-user/{id}', 'GroupController@createUserPost')->name('createUserPost');

@@ -9,6 +9,7 @@ use App\Interfaces;
 use App\User;
 use Redirect;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Crypt;
 
 class GroupController extends Controller
 {
@@ -26,7 +27,7 @@ class GroupController extends Controller
         }
         if($role === 'ADMIN'){
             $group_id= \Auth::user()->group_id;
-            return redirect()->route('showDevices', $group_id);
+            return redirect()->route('showDevices', Crypt::encrypt($group_id));
         }
     }
 
@@ -38,10 +39,10 @@ class GroupController extends Controller
     public function createGroupPost(Request $request)
     {
     	$this->validate($request,[
-            'name' => 'required|max:15|alpha_dash|unique:groups',
+            'name' => 'required|max:15|unique:groups',
         ]);
         $group = new Group;
-        $group->name = $request->name;
+        $group->name = snake_case($request->name);
         $group->save();
         return redirect()->route('showGroups')->with('success','Registry created successfully.');
     }
@@ -55,11 +56,18 @@ class GroupController extends Controller
     public function editGroupPost(Request $request, $id)
     {
         $this->validate($request,[
-            'name' => 'required|max:15|alpha_dash',
+            'name' => "required|max:15|unique:groups,name,$id",
         ]);
+        $nombre = strtolower($request->name);
         DB::table('groups')->where('id', $id)->update(array(
-            'name' => $request->name));
+            'name' => snake_case($nombre)));
         return redirect()->route('showGroups')->with('success','Registry updated successfully.');
+    }
+
+    public function deleteGroup($id)
+    {
+        $group = Group::find($id)->delete();
+        return Redirect::back()->with('success','Registry successfully deleted.');
     }
 
     public function showUsers($id)
@@ -76,8 +84,8 @@ class GroupController extends Controller
     public function createUserPost(Request $request, $id)
     {
         $this->validate($request,[ 
-            'name' => 'required|max:15|alpha_dash',
-            'lastname' => 'required|max:15|alpha',
+            'name' => 'required|max:15',
+            'lastname' => 'required|max:25',
             'email' => 'required|max:50|email|unique:users',
             'password' => 'required|min:8|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[@$!%*#?&]/|confirmed|max:30',
         ]);
@@ -101,13 +109,13 @@ class GroupController extends Controller
     public function editUserPost(Request $request, $id)
     {
         $this->validate($request,[ 
-            'name' => 'required|max:15|alpha_dash',
-            'lastname' => 'required|max:15|alpha',
-            'email' => 'required|max:50|email',
+            'name' => 'required|max:15',
+            'lastname' => 'required|max:25',
+            'email' => "required|max:50|email|unique:users,email,$id",
         ]);
         DB::table('users')->where('id', $id)->update(array(
             'name' => $request->name, 'lastname' => $request->lastname, 'email' => $request->email, 'role' => $request->role));
-        return redirect()->route('showUsers', $id)->with('success','Registry created successfully.');
+        return redirect()->route('showUsers', $request->group_id)->with('success','Registry created successfully.');
     }
 
     public function deleteUser($id)
@@ -118,7 +126,7 @@ class GroupController extends Controller
 
     public function showDevices($id)
     {
-    	$device = DB::table('campuses')->select('id','name')->distinct()->where('group_id', '=', $id)->get();
+    	$device = DB::table('campuses')->select('id','name')->distinct()->where('group_id', '=', Crypt::decrypt($id))->get();
     	return view('groups.showDevices',compact('device','id'));
     }
 
@@ -130,13 +138,13 @@ class GroupController extends Controller
     public function createDevicePost(Request $request)
     {
     	$this->validate($request,[ 
-            'name' => 'required|max:30|alpha_dash|unique:campuses',
+            'name' => 'required|max:30|unique:campuses',
         ]);
         $campus = new Campus;
-        $campus->name = $request->name;
+        $campus->name = snake_case($request->name);
         $campus->group_id = $request->group_id;
         $campus->save();
-        return redirect()->route('showDevices',$request->group_id)->with('success','Registry created successfully.');
+        return redirect()->route('showDevices', Crypt::encrypt($request->group_id))->with('success','Registry created successfully.');
     }
 
     public function showInterfaces($id)

@@ -29,12 +29,12 @@
                         </div>
                         <form method="post" action="{{ route('createDevicePost') }}">
                             {{csrf_field()}}
-                            <input type="hidden" value="{{ $id }}" name="group_id">
+                            <input type="hidden" value="{{ Crypt::decrypt($id) }}" name="group_id">
                             <div class="modal-body">
                                 <div class="box-body">
                                     <div class="form-group">
                                         <label>Campus</label>
-                                        <input type="text" name="name" class="form-control" placeholder="Writte the campus name" value="{{ old('campus') }}">
+                                        <input type="text" name="name" class="form-control" placeholder="Writte the campus name" value="{{ old('name') }}">
                                         <small class="help-block">
                                             Add the name of where the equipment is located.
                                         </small>

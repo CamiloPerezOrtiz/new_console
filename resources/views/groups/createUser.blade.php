@@ -64,14 +64,14 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Password</label>
-                                        <input type="password" class="form-control" name="password" placeholder="Writte the password" value="{{ old('email') }}">
+                                        <input type="password" class="form-control" name="password" placeholder="Writte the password">
                                         <small class="help-block">
                                             The password must contain uppercase letters, lowercase, numbers and characters. Minimum 8 characters.
                                         </small>
                                     </div>
                                     <div class="form-group">
                                         <label>Repeat Password</label>
-                                        <input type="password" class="form-control" name="password_confirmation" placeholder="Confirm the password" value="{{ old('email') }}">
+                                        <input type="password" class="form-control" name="password_confirmation" placeholder="Confirm the password">
                                     </div>
                                 </div>
                                 <div class="box-footer">

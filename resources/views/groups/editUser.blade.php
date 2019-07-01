@@ -29,6 +29,7 @@
                         </div>
                         <form method="post" action="{{ route('editUserPost', $id) }}">
                             {{csrf_field()}}
+                            <input type="hidden" value="{{ $user->group_id }}" name="group_id">
                             <div class="modal-body">
                                 <div class="box-body">
                                     <div class="form-group">
